@@ -1625,6 +1625,10 @@ class HttpClientTest extends TestCase
         $response = $this->factory->post('http://Laravel.com');
 
         $this->assertTrue($response->unauthorized());
+
+        $response = $this->factory->post('http://laravel.com');
+
+        $this->assertTrue($response->unauthorized());
     }
 
     public function testUpperCaseInUrlSchemePart()
@@ -1634,6 +1638,10 @@ class HttpClientTest extends TestCase
         ]);
 
         $response = $this->factory->post('http://laravel.com');
+
+        $this->assertTrue($response->unauthorized());
+
+        $response = $this->factory->post('Http://laravel.com');
 
         $this->assertTrue($response->unauthorized());
     }
