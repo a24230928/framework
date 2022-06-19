@@ -1615,4 +1615,26 @@ class HttpClientTest extends TestCase
                 $request->hasHeader('Authorization', 'Bearer GET /json HTTP/1.1');
         });
     }
+
+    public function testUpperCaseInUrlHostPart()
+    {
+        $this->factory->fake([
+            'Laravel.com' => $this->factory::response('', 401),
+        ]);
+
+        $response = $this->factory->post('http://Laravel.com');
+
+        $this->assertTrue($response->unauthorized());
+    }
+
+    public function testUpperCaseInUrlSchemePart()
+    {
+        $this->factory->fake([
+            'Http://laravel.com' => $this->factory::response('', 401),
+        ]);
+
+        $response = $this->factory->post('http://laravel.com');
+
+        $this->assertTrue($response->unauthorized());
+    }
 }

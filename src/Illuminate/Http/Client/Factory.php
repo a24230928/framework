@@ -219,6 +219,16 @@ class Factory
     public function stubUrl($url, $callback)
     {
         return $this->fake(function ($request, $options) use ($url, $callback) {
+
+            // make `parse_url` can determine `host` part
+            $url = str_contains($url, '//') ? $url : Str::start($url, '//');
+
+            $parsedUrl = parse_url($url);
+
+            // `host` and `scheme` parts are case-insensitive. So if there exists scheme or host, turn it to lower case.
+            $url = isset($parsedUrl['scheme']) ? str_replace($parsedUrl['scheme'], Str::lower($parsedUrl['scheme']), $url) : $url;
+            $url = isset($parsedUrl['host']) ? str_replace($parsedUrl['host'], Str::lower($parsedUrl['host']), $url) : $url;
+
             if (! Str::is(Str::start($url, '*'), $request->url())) {
                 return;
             }
